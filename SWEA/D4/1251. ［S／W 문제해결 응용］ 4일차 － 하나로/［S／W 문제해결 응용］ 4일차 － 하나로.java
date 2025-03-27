@@ -1,108 +1,115 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 class Solution {
-	static int T, N;
-	static double X, Y;
-	static double E;
-	static Island[] islands;
-	static ArrayList<double[]> costs;
-	static int[] parent;
-	static double totalCost;
+    static int T, N;
+    static double E;
+    static Island[] islands;
+    static PriorityQueue<Edge> pq;
+    static int[] parent;
+    static double totalCost;
 
-	static class Island {
-		double number;
-		double x;
-		double y;
+    static class Island {
+        double x, y;
 
-		public Island(double number, double x) {
-			this.number = number;
-			this.x = x;
-		}
-	}
+        public Island(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuffer sb = new StringBuffer();
-		StringTokenizer st;
+    static class Edge implements Comparable<Edge> {
+        int from, to;
+        double cost;
 
-		T = Integer.parseInt(br.readLine());
+        public Edge(int from, int to, double cost) {
+            this.from = from;
+            this.to = to;
+            this.cost = cost;
+        }
 
-		for (int t = 1; t < T+1; t++) {
-			N = Integer.parseInt(br.readLine());
-			islands = new Island[N];
-			costs = new ArrayList<>();
-			parent = new int[N];
-			totalCost = 0.0;
+        @Override
+        public int compareTo(Edge o) {
+            return Double.compare(this.cost, o.cost);
+        }
+    }
 
-			for (int i = 0; i < N; i++) {
-				parent[i] = i;
-			}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringBuffer sb = new StringBuffer();
+        StringTokenizer st;
 
-			st = new StringTokenizer(br.readLine());
-			for (int n = 0; n < N; n++) {
-				X = Integer.parseInt(st.nextToken());
-				islands[n] = new Island(n, X);
-			}
+        T = Integer.parseInt(br.readLine());
 
-			st = new StringTokenizer(br.readLine());
-			for (int n = 0; n < N; n++) {
-				Y = Integer.parseInt(st.nextToken());
-				islands[n].y = Y;
-			}
+        for (int t = 1; t <= T; t++) {
+            N = Integer.parseInt(br.readLine());
+            islands = new Island[N];
+            parent = new int[N];
+            pq = new PriorityQueue<>();
+            totalCost = 0.0;
 
-			E = Double.parseDouble(br.readLine());
+            for (int i = 0; i < N; i++) {
+                parent[i] = i;
+            }
 
-			for (int i = 0; i < N - 1; i++) {
-				for (int j = i + 1; j < N; j++) {
-					Island start = islands[i];
-					Island end = islands[j];
-					double cost = calculateCost(start, end);
-					costs.add(new double[] { cost, start.number, end.number });
-				}
-			}
+            double[] xs = new double[N];
+            double[] ys = new double[N];
 
-			costs.sort((o1, o2) -> Double.compare(o1[0], o2[0]));
+            st = new StringTokenizer(br.readLine());
+            for (int i = 0; i < N; i++) {
+                xs[i] = Double.parseDouble(st.nextToken());
+            }
 
-			for (double[] current : costs) {
-				double cost = current[0];
-				int start = (int) current[1];
-				int end = (int) current[2];
-				
-				if (find(start) != find(end)) {
-					union(start, end);
-					totalCost += cost;
-				}
-			}
+            st = new StringTokenizer(br.readLine());
+            for (int i = 0; i < N; i++) {
+                ys[i] = Double.parseDouble(st.nextToken());
+                islands[i] = new Island(xs[i], ys[i]);
+            }
 
-			sb.append("#").append(t).append(" ").append(Math.round(totalCost)).append("\n");
-		}
-		System.out.print(sb);
-	}
+            E = Double.parseDouble(br.readLine());
 
-	private static void union(int start, int end) {
-		int ps = find(start);
-		int pe = find(end);
-		
-		if (ps < pe) {
-			parent[pe] = ps;
-		} else {
-			parent[ps] = pe;
-		}
-	}
+            for (int i = 0; i < N - 1; i++) {
+                for (int j = i + 1; j < N; j++) {
+                    double cost = calculateCost(islands[i], islands[j]);
+                    pq.offer(new Edge(i, j, cost));
+                }
+            }
 
-	private static int find(int start) {
-		if (parent[start] == start) {
-			return start;
-		}
-		return parent[start] = find(parent[start]);
-	}
+            while (!pq.isEmpty()) {
+                Edge edge = pq.poll();
+                if (find(edge.from) != find(edge.to)) {
+                    union(edge.from, edge.to);
+                    totalCost += edge.cost;
+                }
+            }
 
-	private static double calculateCost(Island start, Island end) {
-		double L = Math.pow(start.x - end.x, 2) + Math.pow(start.y - end.y, 2);
-		return E * L;
-	}
+            sb.append("#").append(t).append(" ").append(Math.round(totalCost)).append("\n");
+        }
+        System.out.print(sb);
+    }
+
+    private static double calculateCost(Island a, Island b) {
+        double dx = a.x - b.x;
+        double dy = a.y - b.y;
+        return E * (dx * dx + dy * dy);
+    }
+
+    private static int find(int x) {
+        if (parent[x] == x) return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    private static void union(int x, int y) {
+        int px = find(x);
+        int py = find(y);
+        
+        if (px < py) {
+        	parent[py] = px;
+        } else {
+        	parent[px] = py;
+        }
+    }
 }
