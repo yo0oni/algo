@@ -10,7 +10,7 @@ public class Main {
         k = Long.parseLong(br.readLine());
 
         long left = 1;
-        long right = N * N;
+        long right = k;
         long answer = 0;
 
         while (left <= right) {
