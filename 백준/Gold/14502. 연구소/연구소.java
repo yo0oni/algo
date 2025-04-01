@@ -8,7 +8,7 @@ public class Main {
 	static int[][] board;
 	static boolean[] visited;
 	static int[][] tempBoard;
-	static int wallCount = 0;
+	static int wallCount = 3;
 	static int maxSafeZone = 0;
 
 	static int[] di = { 0, 1, 0, -1 };
@@ -55,14 +55,15 @@ public class Main {
 					tempBoard[i][j] = board[i][j];
 				}
 			}
-			int count = 0;
 
+			int count = 0;
 			makeWall(current);
+
 			for (int[] v : virus) {
 				count += bfs(v[0], v[1]);
 			}
 
-			maxSafeZone = Math.max(maxSafeZone, N * M - 3 - wallCount - count);
+			maxSafeZone = Math.max(maxSafeZone, N * M - wallCount - count);
 			return;
 		}
 
@@ -70,7 +71,7 @@ public class Main {
 			if (!visited[i]) {
 				visited[i] = true;
 				current.add(i);
-				combi(depth + 1, start + 1, current);
+				combi(depth + 1, i + 1, current);
 				current.remove(current.size() - 1);
 				visited[i] = false;
 			}
