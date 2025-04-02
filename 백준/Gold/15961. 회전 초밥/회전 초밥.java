@@ -1,51 +1,45 @@
-import java.util.*;
 import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int n, d, k, c;
-	static int[] sushi, count;
-	static int varCount = 1;
-	static int maxVarCount = 0;
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+        int n = Integer.parseInt(st.nextToken());
+        int d = Integer.parseInt(st.nextToken());
+        int k = Integer.parseInt(st.nextToken());
+        int c = Integer.parseInt(st.nextToken());
 
-		n = Integer.parseInt(st.nextToken());
-		d = Integer.parseInt(st.nextToken());
-		k = Integer.parseInt(st.nextToken());
-		c = Integer.parseInt(st.nextToken());
-		sushi = new int[n];
-		count = new int[d + 1];
+        int[] sushi = new int[2 * n];
+        for (int i = 0; i < n; i++) {
+            sushi[i] = sushi[i + n] = Integer.parseInt(br.readLine());
+        }
 
-		for (int i = 0; i < n; i++) {
-			int number = Integer.parseInt(br.readLine());
-			sushi[i] = number;
-		}
-		count[c]++;
+        int[] count = new int[d + 1];
+        int uniqueCount = 0;
 
-		for (int i = 0; i < k; i++) {
-			if (count[sushi[i % n]] == 0) {
-				varCount++;
-			}
-			count[sushi[i]]++;
-		}
-		maxVarCount = varCount;
+        for (int i = 0; i < k; i++) {
+            if (count[sushi[i]] == 0) uniqueCount++;
+            count[sushi[i]]++;
+        }
 
-		for (int i = 1; i < n; i++) {
-			count[sushi[(i - 1) % n]]--;
+        int max = (count[c] == 0) ? uniqueCount + 1 : uniqueCount;
 
-			if (count[sushi[(i - 1) % n]] == 0) {
-				varCount--;
-			}
-			if (count[sushi[(i + k - 1) % n]] == 0) {
-				varCount++;
-			}
-			count[sushi[(i + k - 1) % n]]++;
+        for (int i = 1; i < n; i++) {
+            int out = sushi[i - 1];
+            int in = sushi[i + k - 1];
 
-			maxVarCount = Math.max(varCount, maxVarCount);
-		}
+            count[out]--;
+            if (count[out] == 0) uniqueCount--;
 
-		System.out.println(maxVarCount);
-	}
+            if (count[in] == 0) uniqueCount++;
+            count[in]++;
+
+            int current = (count[c] == 0) ? uniqueCount + 1 : uniqueCount;
+            max = Math.max(max, current);
+        }
+
+        System.out.println(max);
+    }
 }
