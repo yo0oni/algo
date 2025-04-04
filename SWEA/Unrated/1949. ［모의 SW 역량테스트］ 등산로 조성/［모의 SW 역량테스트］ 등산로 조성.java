@@ -59,8 +59,6 @@ public class Solution {
 	}
 
 	private static void dfs(int length, int ci, int cj, int currentHeight, boolean cutUsed) {
-		boolean moved = false;
-
 		for (int d = 0; d < 4; d++) {
 			int ni = ci + di[d];
 			int nj = cj + dj[d];
@@ -72,25 +70,17 @@ public class Solution {
 				visited[ni][nj] = true;
 				dfs(length + 1, ni, nj, board[ni][nj], cutUsed);
 				visited[ni][nj] = false;
-				moved = true;
 			} else {
-				if (!cutUsed) {
-					int original = board[ni][nj];
-
-					for (int cut = 1; cut <= K; cut++) {
-						if (original - cut < currentHeight) {
-							visited[ni][nj] = true;
-							dfs(length + 1, ni, nj, original - cut, true);
-							visited[ni][nj] = false;
-							moved = true;
-						}
-					}
+				int cut = board[ni][nj] - currentHeight + 1;
+				if (!cutUsed && cut <= K) {
+					int newHeight = board[ni][nj] - cut;
+					visited[ni][nj] = true;
+					dfs(length + 1, ni, nj, newHeight, true);
+					visited[ni][nj] = false;
 				}
 			}
 		}
-		if (!moved) {
-			maxLength = Math.max(maxLength, length);
-		}
+		maxLength = Math.max(maxLength, length);
 	}
 
 	private static boolean validate(int ni, int nj) {
