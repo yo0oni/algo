@@ -20,26 +20,20 @@ public class Main {
 
 		int left = 0;
 		int right = 0;
-		int sum = numbers[right];
+		int sum = 0;
 		int answer = 0;
 
-		while (right < N) {
-			if (sum < M) {
-				if (right + 1 == N) {
-					break;
-				}
-				sum += numbers[++right];
-			} else if (sum > M) {
+		while (true) {
+			if (sum >= M) {
 				sum -= numbers[left++];
+			} else if (right == N) {
+				break;
+			} else {
+				sum += numbers[right++];
 			}
 
 			if (sum == M) {
 				answer++;
-
-				if (right + 1 == N) {
-					break;
-				}
-				sum += numbers[++right];
 			}
 		}
 		System.out.println(answer);
