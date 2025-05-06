@@ -9,45 +9,37 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
 
+		int[] numbers = new int[N];
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		long[] numbers = new long[N];
 
-		for (int index = 0; index < N; index++) {
-			numbers[index] = Long.parseLong(st.nextToken());
+		for (int i = 0; i < N; i++) {
+			numbers[i] = Integer.parseInt(st.nextToken());
 		}
-		Arrays.sort(numbers);
-		int count = 0;
 
-		for (int index = 0; index < N; index++) {
-			Long target = numbers[index];
+		int answer = 0;
+		Arrays.sort(numbers);
+
+		for (int i = 0; i < N; i++) {
+			int target = numbers[i];
 
 			int left = 0;
 			int right = N - 1;
 
 			while (left < right) {
-				long sum = numbers[left] + numbers[right];
+				int sum = numbers[left] + numbers[right];
 
-				if (sum == target) {
-					if (left != index && right != index) {
-						count++;
-						break;
-					}
+				if (sum == target && left != i && right != i) {
+					answer++;
+					break;
 				}
 
-				if (left == index) {
-					left++;
-				} else if (right == index) {
+				if (sum >= target && left != i) {
 					right--;
 				} else {
-					if (sum >= target) {
-						right--;
-					} else {
-						left++;
-					}
+					left++;
 				}
-
 			}
 		}
-		System.out.println(count);
+		System.out.println(answer);
 	}
 }
