@@ -14,11 +14,9 @@ class Solution {
         for(int i = 0; i < B.length; i ++) {
             if(apq.peek() < bpq.peek()) {
                 answer++;
-                apq.poll();
                 bpq.poll();
-            } else {
-                apq.poll();
-            }
+            } 
+            apq.poll();
         }
         
         return answer;
