@@ -7,10 +7,16 @@ public class Main {
 	static String[] words;
 	static StringBuilder sb = new StringBuilder();
 	static ArrayDeque<String> result = new ArrayDeque<>();
+	static HashSet<Character> vowel = new HashSet<>();
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
+		vowel.add('a');
+		vowel.add('i');
+		vowel.add('e');
+		vowel.add('o');
+		vowel.add('u');
 
 		L = Integer.parseInt(st.nextToken());
 		C = Integer.parseInt(st.nextToken());
@@ -22,7 +28,6 @@ public class Main {
 		}
 
 		Arrays.sort(words);
-
 		dfs(0, 0, new StringBuilder());
 
 		while (!result.isEmpty()) {
@@ -34,8 +39,9 @@ public class Main {
 
 	public static void dfs(int depth, int start, StringBuilder current) {
 		if (current.length() == L) {
-			if (isValid(current.toString()) && !result.contains(current.toString())) {
-				result.add(current.toString());
+			String cs = current.toString();
+			if (isValid(cs) && !result.contains(cs)) {
+				result.add(cs);
 			}
 			return;
 		}
@@ -51,7 +57,7 @@ public class Main {
 		int vowels = 0, consonants = 0;
 
 		for (char c : str.toCharArray()) {
-			if ("aeiou".indexOf(c) >= 0)
+			if (vowel.contains(c))
 				vowels++;
 			else
 				consonants++;
