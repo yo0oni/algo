@@ -27,10 +27,10 @@ public class Main {
 			graph[B].add(A);
 		}
 
-		int answer = N - 1;
-		boolean[] visited = new boolean[N + 1];
 		ArrayDeque<int[]> dq = new ArrayDeque<>();
-		HashMap<Integer, Integer> zizidae = new HashMap<>();
+		boolean[] visited = new boolean[N + 1];
+		int[] zizidae = new int[S + 1];
+		int answer = N - 1;
 
 		visited[P] = true;
 		dq.offer(new int[] { P, 0 });
@@ -43,7 +43,7 @@ public class Main {
 			for (int next : graph[current]) {
 				if (!visited[next]) {
 					if (next >= 1 && next <= S) {
-						zizidae.put(next, crackCount + 1);
+						zizidae[next] = crackCount + 1;
 					} else {
 						dq.offer(new int[] { next, crackCount + 1 });
 						visited[next] = true;
@@ -51,13 +51,10 @@ public class Main {
 				}
 			}
 		}
-		
-		List<Integer> keySet = new ArrayList<>(zizidae.keySet());
-		keySet.sort((a, b) -> zizidae.get(a) - zizidae.get(b));
-		
-		for(int i = 0; i < 2; i ++) {
-			answer -= zizidae.get(keySet.get(i));
-		}
+
+		Arrays.sort(zizidae);
+		answer -= zizidae[1];
+		answer -= zizidae[2];
 
 		System.out.println(answer);
 	}
