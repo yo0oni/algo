@@ -2,35 +2,30 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-	static int N;
-	static int[] origin;
-	static HashSet<Integer> numbers = new HashSet<>();
-	static HashMap<Integer, Integer> indexing = new HashMap<>();
-	static PriorityQueue<Integer> number;
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException{
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
-		N = Integer.parseInt(br.readLine());
-		origin = new int[N];
+		int N = Integer.parseInt(br.readLine());
 		
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		for(int i = 0; i < N; i ++) {
-			int number = Integer.parseInt(st.nextToken());
-			origin[i] = number;
-			numbers.add(number);
+		int arr[]=new int[N];
+		int sort[]=new int[N];
+		HashMap<Integer,Integer> map = new HashMap<>();
+		StringTokenizer st= new StringTokenizer(br.readLine()," ");
+		
+		for(int i=0; i<N; i++) 
+			arr[i]=Integer.parseInt(st.nextToken());
+		sort = arr.clone();
+		Arrays.sort(sort);
+		int index=0;
+		for(int i=0; i<N; i++) {
+			if(!map.containsKey(sort[i]))
+				map.put(sort[i], index++);
 		}
-		
-		number = new PriorityQueue<>(numbers);
-		int index = 0;
-		
-		while(!number.isEmpty()) {
-			indexing.put(number.poll(), index++);
-		}
-		
-		for(int i = 0; i < N; i ++) {
-			sb.append(indexing.get(origin[i])).append(" ");
-		}
-		System.out.println(sb);
- 	}
+		for(int i=0; i<N; i++)
+			sb.append(map.get(arr[i])+" ");
+		System.out.print(sb);
+		br.close();
+	    
+	}
 }
