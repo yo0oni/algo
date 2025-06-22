@@ -29,7 +29,7 @@ public class Main {
 
 		ArrayDeque<int[]> dq = new ArrayDeque<>();
 		boolean[] visited = new boolean[N + 1];
-		int[] zizidae = new int[S + 1];
+		int[] support = new int[S + 1];
 		int answer = N - 1;
 
 		visited[P] = true;
@@ -43,7 +43,7 @@ public class Main {
 			for (int next : graph[current]) {
 				if (!visited[next]) {
 					if (next >= 1 && next <= S) {
-						zizidae[next] = crackCount + 1;
+						support[next] = crackCount + 1;
 					} else {
 						dq.offer(new int[] { next, crackCount + 1 });
 						visited[next] = true;
@@ -52,9 +52,9 @@ public class Main {
 			}
 		}
 
-		Arrays.sort(zizidae);
-		answer -= zizidae[1];
-		answer -= zizidae[2];
+		Arrays.sort(support);
+		answer -= support[1];
+		answer -= support[2];
 
 		System.out.println(answer);
 	}
