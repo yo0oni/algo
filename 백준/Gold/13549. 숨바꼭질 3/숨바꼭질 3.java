@@ -3,7 +3,6 @@ import java.util.*;
 
 public class Main {
 	static int N, K;
-	static HashSet<Integer> visited;
 	static int[] dir = new int[] { -1, 1, 2 };
 
 	static class Position implements Comparable<Position> {
@@ -33,7 +32,7 @@ public class Main {
 		}
 
 		PriorityQueue<Position> pq = new PriorityQueue<>();
-		visited = new HashSet<>();
+		boolean[] visited = new boolean[100001];
 		pq.add(new Position(N, 0));
 
 		while (!pq.isEmpty()) {
@@ -41,9 +40,9 @@ public class Main {
 			int current = c.num;
 			int time = c.time;
 
-			if (visited.contains(current)) continue;
-			visited.add(current);
-			
+			if (visited[current]) continue;
+			visited[current] = true;
+
 			if (current == K) {
 				System.out.println(time);
 				return;
